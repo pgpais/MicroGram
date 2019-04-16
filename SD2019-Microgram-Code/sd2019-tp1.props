@@ -1,3 +1,11 @@
+posts-rest-service-mainclass= posts-rest-service-port=
+
+profiles-rest-service-mainclass= profiles-rest-service-port=
+
+mediastorage-rest-service-mainclass= mediastorage-rest-service-port=
+
+posts-soap-service-mainclass= posts-soap-service-port=
+
+profiles-soap-service-mainclass= profiles-soap-service-port=
 
 discovery-multicast-address=226.226.226.226:2266
-
