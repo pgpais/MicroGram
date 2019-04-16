@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import microgram.api.Post;
+import microgram.api.Profile;
 import microgram.api.java.Posts;
 import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
