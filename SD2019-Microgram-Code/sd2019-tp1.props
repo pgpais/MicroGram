@@ -1,11 +1,11 @@
-posts-rest-service-mainclass= 
-posts-rest-service-port=
-profiles-rest-service-mainclass= 
-profiles-rest-service-port=
+posts-rest-service-mainclass=microgram.impl.srv.rest.RestPostsResources
+posts-rest-service-port=7777
+profiles-rest-service-mainclass=microgram.impl.srv.rest.RestProfilesResources
+profiles-rest-service-port=7777
 mediastorage-rest-service-mainclass= 
 mediastorage-rest-service-port=
 posts-soap-service-mainclass= 
-posts-soap-service-port=
+posts-soap-service-port=7777
 profiles-soap-service-mainclass= 
-profiles-soap-service-port=
+profiles-soap-service-port=7777
 discovery-multicast-address=226.226.226.226:2266
