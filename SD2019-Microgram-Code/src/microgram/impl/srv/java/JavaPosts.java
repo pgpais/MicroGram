@@ -37,7 +37,11 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		return Result.error(ErrorCode.NOT_IMPLEMENTED);
+		Post res = posts.remove(postId);
+		if (res != null)
+			return error(NOT_FOUND);
+		else
+			return ok();
 	}
 
 	@Override
@@ -96,6 +100,7 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
+		// TODO: Needs Profile?
 		return error(NOT_IMPLEMENTED);
 	}
 }
