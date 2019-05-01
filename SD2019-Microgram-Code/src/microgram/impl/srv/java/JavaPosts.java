@@ -6,19 +6,25 @@ import static microgram.api.java.Result.ErrorCode.CONFLICT;
 import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
 import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import discovery.Discovery;
 import microgram.api.Post;
 import microgram.api.Profile;
 import microgram.api.java.Posts;
+import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
+import microgram.impl.clt.java._TODO_RetryProfilesClient;
+import microgram.impl.clt.rest.RestProfilesClient;
 import utils.Hash;
 
 public class JavaPosts implements Posts {
@@ -101,12 +107,25 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		// TODO: Needs Profile?
-		
-		
-		
-		
-		
-		return error(NOT_IMPLEMENTED);
+		URI[] uri = Discovery.findUrisOf("ProfilesService", 1);
+
+		_TODO_RetryProfilesClient client = new _TODO_RetryProfilesClient(new RestProfilesClient(uri[0]));
+
+		Result<Set<String>> res = client.getFollowing(userId);
+		Set<String> following = null;
+
+		if (res.isOK()) {
+			following = res.value();
+		} else {
+			error(NOT_FOUND);
+		}
+
+		List<String> posts = new LinkedList<String>();
+
+		for (String followId : following) {
+			posts.addAll(userPosts.get(followId));
+		}
+
+		return ok(posts);
 	}
 }
