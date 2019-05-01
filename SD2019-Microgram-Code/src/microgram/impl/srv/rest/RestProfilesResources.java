@@ -3,6 +3,7 @@ package microgram.impl.srv.rest;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 import microgram.api.Profile;
 import microgram.api.java.Profiles;
@@ -41,5 +42,10 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 	@Override
 	public boolean isFollowing(String userId1, String userId2) {
 		return super.resultOrThrow(impl.isFollowing(userId1, userId2));
+	}
+
+	@Override
+	public Set<String> getFollowing(String userId) {
+		return super.resultOrThrow(impl.getFollowing(userId));
 	}	
 }
