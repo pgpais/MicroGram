@@ -67,6 +67,7 @@ public class Discovery {
 	 * 
 	 */
 	public static URI[] findUrisOf(String serviceName, int minRepliesNeeded) throws IOException {
+		// TODO: treat exception?
 		try (MulticastSocket socket = new MulticastSocket(DISCOVERY_ADDR.getPort())) {
 			socket.joinGroup(DISCOVERY_ADDR.getAddress());
 
