@@ -66,7 +66,7 @@ public class Discovery {
 	 * @throws IOException 
 	 * 
 	 */
-	public static URI[] findUrisOf(String serviceName, int minRepliesNeeded) throws IOException {
+	public static URI[] findUrisOf(String serviceName, int minRepliesNeeded){
 		// TODO: treat exception?
 		try (MulticastSocket socket = new MulticastSocket(DISCOVERY_ADDR.getPort())) {
 			socket.joinGroup(DISCOVERY_ADDR.getAddress());
@@ -103,6 +103,10 @@ public class Discovery {
 			}
 
 			return result.toArray(new URI[result.size()]);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return null;
 	}
 }
