@@ -106,7 +106,7 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		URI[] uri = Discovery.findUrisOf("ProfilesService", 1);
+		URI[] uri = Discovery.findUrisOf("Microgram-Profiles", 1);
 
 		_TODO_RetryProfilesClient client = new _TODO_RetryProfilesClient(new RestProfilesClient(uri[0]));
 
