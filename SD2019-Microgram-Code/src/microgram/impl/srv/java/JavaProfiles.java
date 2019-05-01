@@ -49,7 +49,17 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	
 	@Override
 	public Result<Void> deleteProfile(String userId) {
-		return Result.error(ErrorCode.NOT_IMPLEMENTED);
+		users.remove(userId);
+		following.remove(userId);
+		Set<String> s = followers.get(userId);
+		for(String u: s) {
+			Set<String> temp = following.get(u);
+			temp.remove(userId);
+			following.replace(u, temp);	
+		}
+		followers.remove(userId);
+		
+		return ok();
 	}
 	
 	@Override

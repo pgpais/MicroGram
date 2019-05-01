@@ -33,42 +33,67 @@ public class RestPostsClient extends RestClient implements Posts {
 
 	@Override
 	public Result<Post> getPost(String postId) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target.path(postId)
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get();
+		
+		
+		return super.responseContents(r, Status.OK, new GenericType<Post>(){});
 	}
 
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target.path(postId)
+				.request()
+				.delete();
+		
+		
+		return super.verifyResponse(r, Status.OK);
 	}
 
 
 	@Override
 	public Result<Void> like(String postId, String userId, boolean isLiked) {
-		// TODO Auto-generated method stub
-		return null;
+			Response r = target.path(postId).path("/likes").path(userId)
+					.request()
+					.put(Entity.entity(isLiked, MediaType.APPLICATION_JSON));
+		
+		
+
+			return super.verifyResponse(r, Status.OK);
 	}
 
 
 	@Override
 	public Result<Boolean> isLiked(String postId, String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target.path(postId).path("/likes").path(userId)
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get();
+		
+		
+		return super.responseContents(r, Status.OK, new GenericType<Boolean>(){});
 	}
 
 
 	@Override
 	public Result<List<String>> getPosts(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target.path("/from").path(userId)
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get();
+		
+		
+		return super.responseContents(r, Status.OK, new GenericType<List<String>>(){});
 	}
 
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		Response r = target.path(userId)
+		
+		Response r = target.path("/feed").path(userId)
 				.request()
 				.accept(MediaType.APPLICATION_JSON)
 				.get();
