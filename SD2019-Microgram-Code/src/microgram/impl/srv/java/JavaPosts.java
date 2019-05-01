@@ -102,11 +102,7 @@ public class JavaPosts implements Posts {
 	@Override
 	public Result<List<String>> getFeed(String userId) {
 		// TODO: Needs Profile?
-		
-		
-		
-		
-		
+
 		return error(NOT_IMPLEMENTED);
 	}
 }

@@ -2,6 +2,7 @@ package microgram.impl.clt.rest;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
@@ -58,14 +59,34 @@ public class RestProfilesClient extends RestClient implements Profiles {
 
 	@Override
 	public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Response r = target.path(userId1).path("/following").path(userId2)
+				.request()
+				.put(Entity.entity(isFollowing, MediaType.APPLICATION_JSON));
+	
+	
+
+		return super.verifyResponse(r, Status.OK);
 	}
 
 	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target.path(userId1).path("/following").path(userId2)
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get();
+		
+		return super.responseContents(r, Status.OK, new GenericType<Boolean>() {});
+	}
+
+	@Override
+	public Result<Set<String>> getFollowing(String userId) {
+		Response r = target.path(userId).path("/following")
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get();
+		
+		return super.responseContents(r, Status.OK, new GenericType<Set<String>>() {});
 	}
 	
 	
