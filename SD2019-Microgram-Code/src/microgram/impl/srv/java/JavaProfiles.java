@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import microgram.api.Profile;
+import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
 import microgram.impl.srv.rest.RestResource;
@@ -88,5 +89,11 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 			return error(NOT_FOUND);
 		else
 			return ok(s1.contains( userId2 ) && s2.contains( userId1 ));
+	}
+
+	@Override
+	public Result<Set<String>> getFollowing(String userId) {
+		Set<String> res = following.get(userId);
+		return res != null ? ok(res) : error(NOT_FOUND);
 	}
 }
