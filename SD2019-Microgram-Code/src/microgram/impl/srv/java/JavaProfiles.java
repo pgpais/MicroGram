@@ -103,6 +103,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 	@Override
 	public Result<Set<String>> getFollowing(String userId) {
+		
 		Set<String> res = following.get(userId);
 		return res != null ? ok(res) : error(NOT_FOUND);
 	}
