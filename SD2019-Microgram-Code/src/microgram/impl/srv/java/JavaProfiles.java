@@ -5,18 +5,22 @@ import static microgram.api.java.Result.ok;
 import static microgram.api.java.Result.ErrorCode.CONFLICT;
 import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import discovery.Discovery;
 import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
+import microgram.impl.srv.rest.ProfilesRestServer;
 import microgram.impl.srv.rest.RestResource;
 
 public class JavaProfiles extends RestResource implements microgram.api.java.Profiles {
@@ -24,6 +28,19 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	protected Map<String, Profile> users = new ConcurrentHashMap<>();
 	protected Map<String, Set<String>> followers = new ConcurrentHashMap<>();
 	protected Map<String, Set<String>> following = new ConcurrentHashMap<>();
+
+	private List<URI> postServers = new LinkedList<URI>();
+
+	// TODO: this isn't needed?
+	public JavaProfiles() {
+
+		new Thread(() -> {
+			// TODO: check if this works
+			for (URI uri : Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1))
+				postServers.add(uri);
+		}).start();
+
+	}
 
 	@Override
 	public Result<Profile> getProfile(String userId) {
@@ -38,8 +55,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 	@Override
 	public Result<Void> createProfile(Profile profile) {
-		// TODO: Conflict when OK was expected
-		// might also be related to slow VM?
+
 		Profile res = users.putIfAbsent(profile.getUserId(), profile);
 		if (res != null)
 			return error(CONFLICT);
@@ -51,10 +67,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 	@Override
 	public Result<Void> deleteProfile(String userId) {
-		// TODO: not fixed, failed at 4g (concurrent stuff)
-		// might be related to number of cpu cores.
-		// should be tested in a non-VM ubuntu
-		
+
 		if (users.remove(userId) == null) {
 			return error(NOT_FOUND);
 		}
@@ -78,7 +91,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 				temp.remove(userId);
 				followers.replace(u, temp);
 			}
-			
+
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}

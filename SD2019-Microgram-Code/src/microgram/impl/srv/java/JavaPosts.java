@@ -33,7 +33,21 @@ public class JavaPosts implements Posts {
 	protected Map<String, Post> posts = new ConcurrentHashMap<>();
 	protected Map<String, Set<String>> likes = new ConcurrentHashMap<>();
 	protected Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
+	
+	private List<URI> profileServers;
 
+	public JavaPosts() {
+		
+		profileServers = new LinkedList<URI>();
+
+		new Thread(() -> {
+			// TODO: check if this works
+			for (URI uri : Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1))
+				profileServers.add(uri);
+		}).start();
+
+	}
+	
 	@Override
 	public Result<Post> getPost(String postId) {
 		Post res = posts.get(postId);
