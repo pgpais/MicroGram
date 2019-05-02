@@ -25,6 +25,7 @@ import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
 import microgram.impl.clt.java.RetryProfilesClient;
 import microgram.impl.clt.rest.RestProfilesClient;
+import microgram.impl.srv.rest.ProfilesRestServer;
 import utils.Hash;
 
 public class JavaPosts implements Posts {
@@ -107,7 +108,7 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		URI[] uri = Discovery.findUrisOf("Microgram-Profiles", 1);
+		URI[] uri = Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1);
 
 		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(uri[0]));
 
