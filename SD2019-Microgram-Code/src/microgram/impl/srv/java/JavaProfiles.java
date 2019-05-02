@@ -25,6 +25,7 @@ import microgram.impl.clt.java.RetryPostsClient;
 import microgram.impl.clt.rest.RestPostsClient;
 import microgram.impl.srv.rest.PostsRestServer;
 import microgram.impl.srv.rest.ProfilesRestServer;
+import microgram.impl.srv.rest.RestMediaStorageServer;
 import microgram.impl.srv.rest.RestResource;
 import utils.Sleep;
 
@@ -35,16 +36,23 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	protected Map<String, Set<String>> following = new ConcurrentHashMap<>();
 
 	private List<URI> postServers = new LinkedList<URI>();
+	private List<URI> mediaServers = new LinkedList<URI>();
 	private static int SLEEP_TIME = 2;
 
-	// TODO: this isn't needed?
 	public JavaProfiles() {
 
 		new Thread(() -> {
-			// TODO: check if this works
 			while (true) {
 				for (URI uri : Discovery.findUrisOf(PostsRestServer.SERVICE, 1))
 					postServers.add(uri);
+				Sleep.seconds(SLEEP_TIME);
+			}
+		}).start();
+		
+		new Thread(() -> {
+			while (true) {
+				for (URI uri : Discovery.findUrisOf(RestMediaStorageServer.SERVICE, 1))
+					mediaServers.add(uri);
 				Sleep.seconds(SLEEP_TIME);
 			}
 		}).start();
