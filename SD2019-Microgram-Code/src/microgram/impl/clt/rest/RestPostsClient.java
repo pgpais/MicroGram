@@ -105,8 +105,13 @@ public class RestPostsClient extends RestClient implements Posts {
 
 	@Override
 	public Result<Integer> getPostNumber(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target.path("/posts").path(userId)
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get();
+		
+		
+		return super.responseContents(r, Status.OK, new GenericType<Integer>(){});
 	}
 
 
