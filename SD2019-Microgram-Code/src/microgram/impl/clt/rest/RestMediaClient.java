@@ -8,12 +8,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import microgram.api.Post;
-import microgram.api.java.Media;
+import microgram.api.java.MediaStorage;
 import microgram.api.java.Result;
 import microgram.api.rest.RestMediaStorage;
 
-public class RestMediaClient extends RestClient implements Media {
+public class RestMediaClient extends RestClient implements MediaStorage {
 
 	public RestMediaClient(URI serverUri) {
 		super(serverUri, RestMediaStorage.PATH);
@@ -37,6 +36,15 @@ public class RestMediaClient extends RestClient implements Media {
 		
 		
 		return super.responseContents(r, Status.OK, new GenericType<byte[]>(){});
+	}
+
+	@Override
+	public Result<Void> delete(String id) {
+		Response r = target.path(id)
+				.request()
+				.delete();
+		
+		return super.verifyResponse(r, Status.OK);
 	}
 
 }
