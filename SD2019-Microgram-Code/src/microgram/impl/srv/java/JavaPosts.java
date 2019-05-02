@@ -26,6 +26,7 @@ import microgram.api.java.Result.ErrorCode;
 import microgram.impl.clt.java.RetryProfilesClient;
 import microgram.impl.clt.rest.RestProfilesClient;
 import microgram.impl.srv.rest.ProfilesRestServer;
+import microgram.impl.srv.rest.RestMediaStorageServer;
 import utils.Hash;
 import utils.Sleep;
 
@@ -36,6 +37,7 @@ public class JavaPosts implements Posts {
 	protected Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
 
 	private List<URI> profileServers;
+	private List<URI> mediaServers;
 	private static int SLEEP_TIMEOUT = 2;
 
 	public JavaPosts() {
@@ -47,6 +49,16 @@ public class JavaPosts implements Posts {
 			while (true) {
 				for (URI uri : Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1))
 					profileServers.add(uri);
+				Sleep.seconds(SLEEP_TIMEOUT);
+			}
+		}).start();
+		
+		mediaServers = new LinkedList<URI>();
+		
+		new Thread(() -> {
+			while (true) {
+				for (URI uri : Discovery.findUrisOf(RestMediaStorageServer.SERVICE, 1))
+					mediaServers.add(uri);
 				Sleep.seconds(SLEEP_TIMEOUT);
 			}
 		}).start();
@@ -138,11 +150,7 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		// Use profile server list, maybe make cycle for multiple servers
-//		URI[] uri = Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1);
-//
-//		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(uri[0]));
-
+		
 		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
 		Result<Set<String>> res = client.getFollowing(userId);
 		Set<String> following = null;
