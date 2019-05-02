@@ -163,17 +163,16 @@ public class JavaPosts implements Posts {
 	
 	@Override
 	public Result<Integer> getPostNumber(String userId){
-		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
-		Result<Profile> res = client.getProfile(userId);
-		int posts = -1;
-
-		if (res.isOK()) {
-			posts = res.value().getPosts();
-		} else {
+		Set<String> posts = userPosts.get(userId);
+		int res = -1;
+		if(posts == null) {
 			return error(NOT_FOUND);
 		}
+		else
+			res = posts.size();
+		
 
-		return ok(posts);
+		return ok(res);
 	}
 }
 
