@@ -76,6 +76,13 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<String> createPost(Post post) {
+		
+		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
+		Result<Profile> res = client.getProfile(post.getOwnerId());
+		if(!res.isOK()) {
+			return error(NOT_FOUND);
+		}
+		
 		String postId = Hash.of(post.getOwnerId(), post.getMediaUrl());
 		if (posts.putIfAbsent(postId, post) == null) {
 
