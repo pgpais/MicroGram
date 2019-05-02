@@ -4,12 +4,12 @@ import java.net.URI;
 
 import microgram.api.java.Media;
 import microgram.api.java.Result;
+import microgram.api.rest.RestMediaStorage;
 
 public class RestMediaClient extends RestClient implements Media {
 
-	public RestMediaClient(URI uri, String path) {
-		super(uri, path);
-		// TODO Auto-generated constructor stub
+	public RestMediaClient(URI serverUri) {
+		super(serverUri, RestMediaStorage.PATH);
 	}
 
 	@Override
