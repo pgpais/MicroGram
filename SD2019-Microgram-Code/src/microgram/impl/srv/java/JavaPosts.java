@@ -67,11 +67,11 @@ public class JavaPosts implements Posts {
 		Post res = posts.remove(postId);
 		if (res == null)
 			return error(NOT_FOUND);
-		
+
 		likes.remove(postId);
 		userPosts.get(res.getOwnerId()).remove(postId);
 		return ok();
-		
+
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class JavaPosts implements Posts {
 
 			posts.add(postId);
 		}
-return ok(postId);
+		return ok(postId);
 	}
 
 	@Override
@@ -152,19 +152,16 @@ return ok(postId);
 		}
 		return ok(posts);
 	}
-	
+
 	@Override
-	public Result<Integer> getPostNumber(String userId){
+	public Result<Integer> getPostNumber(String userId) {
 		Set<String> posts = userPosts.get(userId);
 		int res = -1;
-		if(posts == null) {
+		if (posts == null) {
 			return ok(0);
-		}
-		else
+		} else
 			res = posts.size();
-		
 
 		return ok(res);
 	}
 }
-
