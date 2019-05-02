@@ -65,19 +65,15 @@ public class JavaPosts implements Posts {
 	@Override
 	public Result<Void> deletePost(String postId) {
 		
-		Result<Post> res = getPost(postId);
-		System.err.println(postId);
+
 		
-		if (!res.isOK())
+		if (posts.remove(postId) == null)
 			return error(NOT_FOUND);
 		
-		Post post = res.value();
+		Result<Post> res = getPost(postId);
 		
-		boolean removed = posts.remove(postId, post);
-		System.err.println("remove was " + removed);
-
 		likes.remove(postId);
-		userPosts.get(post.getOwnerId()).remove(postId);
+		userPosts.get(res.value().getOwnerId()).remove(postId);
 		return ok();
 
 	}
