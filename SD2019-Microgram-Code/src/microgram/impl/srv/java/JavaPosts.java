@@ -27,27 +27,32 @@ import microgram.impl.clt.java.RetryProfilesClient;
 import microgram.impl.clt.rest.RestProfilesClient;
 import microgram.impl.srv.rest.ProfilesRestServer;
 import utils.Hash;
+import utils.Sleep;
 
 public class JavaPosts implements Posts {
 
 	protected Map<String, Post> posts = new ConcurrentHashMap<>();
 	protected Map<String, Set<String>> likes = new ConcurrentHashMap<>();
 	protected Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
-	
+
 	private List<URI> profileServers;
+	private static int TIMEOUT = 2;
 
 	public JavaPosts() {
-		
+
 		profileServers = new LinkedList<URI>();
 
 		new Thread(() -> {
 			// TODO: check if this works
-			for (URI uri : Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1))
-				profileServers.add(uri);
+			while (true) {
+				for (URI uri : Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1))
+					profileServers.add(uri);
+				Sleep.seconds(TIMEOUT);
+			}
 		}).start();
 
 	}
-	
+
 	@Override
 	public Result<Post> getPost(String postId) {
 		Post res = posts.get(postId);
@@ -68,6 +73,9 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<String> createPost(Post post) {
+		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
+		Profile prof = client.getProfile(post.getOwnerId()).value();
+		
 		String postId = Hash.of(post.getOwnerId(), post.getMediaUrl());
 		if (posts.putIfAbsent(postId, post) == null) {
 
@@ -122,11 +130,11 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		//Use profile server list, maybe make cycle for multiple servers
+		// Use profile server list, maybe make cycle for multiple servers
 //		URI[] uri = Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1);
 //
 //		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(uri[0]));
-		
+
 		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
 		Result<Set<String>> res = client.getFollowing(userId);
 		Set<String> following = null;
