@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import discovery.Discovery;
 import microgram.api.Post;
@@ -28,9 +29,9 @@ import utils.Hash;
 
 public class JavaPosts implements Posts {
 
-	protected Map<String, Post> posts = new HashMap<>();
-	protected Map<String, Set<String>> likes = new HashMap<>();
-	protected Map<String, Set<String>> userPosts = new HashMap<>();
+	protected Map<String, Post> posts = new ConcurrentHashMap<>();
+	protected Map<String, Set<String>> likes = new ConcurrentHashMap<>();
+	protected Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
 
 	@Override
 	public Result<Post> getPost(String postId) {
