@@ -5,16 +5,20 @@ import microgram.api.java.Result;
 
 public class RetryMediaClient extends RetryClient implements Media {
 
+	final Media impl;
+
+	public RetryMediaClient(Media impl) {
+		this.impl = impl;
+	}
+
 	@Override
 	public Result<String> upload(byte[] bytes) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry(() -> impl.upload(bytes));
 	}
 
 	@Override
 	public Result<byte[]> download(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry(() -> impl.download(id));
 	}
 
 }
