@@ -122,10 +122,12 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		URI[] uri = Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1);
-
-		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(uri[0]));
-
+		//Use profile server list
+//		URI[] uri = Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1);
+//
+//		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(uri[0]));
+		
+		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
 		Result<Set<String>> res = client.getFollowing(userId);
 		Set<String> following = null;
 
