@@ -21,38 +21,32 @@ public class RetryPostsClient extends RetryClient implements Posts {
 
 	@Override
 	public Result<String> createPost(Post post) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry( () -> impl.createPost(post));
 	}
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry( () -> impl.deletePost(postId));
 	}
 
 	@Override
 	public Result<Void> like(String postId, String userId, boolean isLiked) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry( () -> impl.like(postId, userId, isLiked));
 	}
 
 	@Override
 	public Result<Boolean> isLiked(String postId, String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry( () -> impl.isLiked(postId, userId));
 	}
 
 	@Override
 	public Result<List<String>> getPosts(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry( () -> impl.getPosts(userId));
 	}
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry( () -> impl.getFeed(userId));
 	}
 
 }
