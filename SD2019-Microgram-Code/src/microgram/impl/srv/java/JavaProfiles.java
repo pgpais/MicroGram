@@ -4,6 +4,7 @@ import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ok;
 import static microgram.api.java.Result.ErrorCode.CONFLICT;
 import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
+import static microgram.api.java.Result.ErrorCode.INTERNAL_ERROR;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -20,8 +21,12 @@ import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 import microgram.api.java.Result.ErrorCode;
+import microgram.impl.clt.java.RetryPostsClient;
+import microgram.impl.clt.rest.RestPostsClient;
+import microgram.impl.srv.rest.PostsRestServer;
 import microgram.impl.srv.rest.ProfilesRestServer;
 import microgram.impl.srv.rest.RestResource;
+import utils.Sleep;
 
 public class JavaProfiles extends RestResource implements microgram.api.java.Profiles {
 
@@ -30,27 +35,42 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	protected Map<String, Set<String>> following = new ConcurrentHashMap<>();
 
 	private List<URI> postServers = new LinkedList<URI>();
+	private static int SLEEP_TIME = 5;
 
 	// TODO: this isn't needed?
 	public JavaProfiles() {
 
 		new Thread(() -> {
 			// TODO: check if this works
-			for (URI uri : Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1))
-				postServers.add(uri);
+			while (true) {
+				for (URI uri : Discovery.findUrisOf(PostsRestServer.SERVICE, 1))
+					postServers.add(uri);
+				Sleep.seconds(SLEEP_TIME);
+			}
 		}).start();
 
 	}
 
 	@Override
 	public Result<Profile> getProfile(String userId) {
-		Profile res = users.get(userId);
-		if (res == null)
+		Profile prof = users.get(userId);
+		if (prof == null)
 			return error(NOT_FOUND);
 
-		res.setFollowers(followers.get(userId).size());
-		res.setFollowing(following.get(userId).size());
-		return ok(res);
+		prof.setFollowers(followers.get(userId).size());
+		prof.setFollowing(following.get(userId).size());
+		
+		RetryPostsClient client = new RetryPostsClient(new RestPostsClient(postServers.get(0)));
+		Result<Integer> res = client.getPostNumber(userId);
+		
+		if(res.isOK()) {
+			prof.setPosts(res.value());
+		} else {
+			return error(INTERNAL_ERROR);
+		}
+		
+		
+		return ok(prof);
 	}
 
 	@Override
