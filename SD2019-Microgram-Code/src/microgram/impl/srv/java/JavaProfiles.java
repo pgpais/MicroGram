@@ -38,6 +38,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 	@Override
 	public Result<Void> createProfile(Profile profile) {
+		// TODO: Conflict when OK was expected
 		Profile res = users.putIfAbsent( profile.getUserId(), profile );
 		if( res != null ) 
 			return error(CONFLICT);
@@ -49,7 +50,9 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	
 	@Override
 	public Result<Void> deleteProfile(String userId) {
-		//TODO: not fixed, failed at 4g (concurrent stuff)
+		//	TODO: not fixed, failed at 4g (concurrent stuff)
+		//	might be related to number of cpu cores.
+		//	should be tested in a non-VM ubuntu
 		if(users.remove(userId) == null)
 		{
 			return error(NOT_FOUND);
