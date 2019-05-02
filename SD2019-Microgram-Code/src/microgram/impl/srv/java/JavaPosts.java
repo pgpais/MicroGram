@@ -74,7 +74,14 @@ public class JavaPosts implements Posts {
 	@Override
 	public Result<String> createPost(Post post) {
 		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
-		Profile prof = client.getProfile(post.getOwnerId()).value();
+		Result<Profile> res = client.getProfile(post.getOwnerId());
+		Profile prof = null;
+		
+		if(res.isOK()) {
+			prof = res.value();
+		} else {
+			error(NOT_FOUND);
+		}
 		
 		String postId = Hash.of(post.getOwnerId(), post.getMediaUrl());
 		if (posts.putIfAbsent(postId, post) == null) {
@@ -86,6 +93,7 @@ public class JavaPosts implements Posts {
 				userPosts.put(post.getOwnerId(), posts = new LinkedHashSet<>());
 
 			posts.add(postId);
+			prof.setPosts(posts.size());
 		}
 		return ok(postId);
 	}
