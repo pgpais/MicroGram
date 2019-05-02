@@ -53,8 +53,11 @@ public class RestProfilesClient extends RestClient implements Profiles {
 
 	@Override
 	public Result<List<Profile>> search(String prefix) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target
+				.queryParam("query", prefix)
+				.request()
+				.delete();
+		return super.verifyResponse(r, Status.OK);
 	}
 
 	@Override
