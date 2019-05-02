@@ -103,9 +103,10 @@ public class Discovery {
 			}
 
 			return result.toArray(new URI[result.size()]);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (SocketException e) {
 			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 		return null;
 	}
