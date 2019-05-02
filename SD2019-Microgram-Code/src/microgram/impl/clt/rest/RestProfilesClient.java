@@ -44,7 +44,7 @@ public class RestProfilesClient extends RestClient implements Profiles {
 
 	@Override
 	public Result<Void> deleteProfile(String userId) {
-		Response r = target.path(userId)
+		Response r = target.path("delete").path(userId)
 				.request()
 				.delete();
 		
