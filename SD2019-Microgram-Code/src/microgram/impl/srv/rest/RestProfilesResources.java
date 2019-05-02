@@ -47,5 +47,10 @@ public class RestProfilesResources extends RestResource implements RestProfiles 
 	@Override
 	public Set<String> getFollowing(String userId) {
 		return super.resultOrThrow(impl.getFollowing(userId));
+	}
+
+	@Override
+	public void deleteProfile(String userId) {
+		super.resultOrThrow(impl.deleteProfile(userId));
 	}	
 }

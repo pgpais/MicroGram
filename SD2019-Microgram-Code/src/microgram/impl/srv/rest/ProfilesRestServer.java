@@ -33,11 +33,7 @@ public class ProfilesRestServer {
 
 		config.register(new RestProfilesResources(new URI(serverURI)));
 
-		try {
-			JdkHttpServerFactory.createHttpServer(URI.create(serverURI), config);
-		} catch (Exception e) {
-			Log.info(e.getMessage());
-		}
+		JdkHttpServerFactory.createHttpServer(URI.create(serverURI), config);
 
 		Log.info(String.format("%s Server ready @ %s\n", SERVICE, serverURI));
 

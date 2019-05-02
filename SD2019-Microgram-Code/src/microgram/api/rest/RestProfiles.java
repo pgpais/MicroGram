@@ -38,7 +38,7 @@ public interface RestProfiles {
 	void createProfile( Profile profile );
 	
 	@DELETE
-	@Path("/delete/{userId}")
+	@Path("{userId}")
 	void deleteProfile( @PathParam("userId") String userId);
 	
 	@GET
