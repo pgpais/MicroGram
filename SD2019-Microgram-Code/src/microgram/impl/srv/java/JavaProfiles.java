@@ -4,10 +4,7 @@ import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ok;
 import static microgram.api.java.Result.ErrorCode.CONFLICT;
 import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
-import static microgram.api.java.Result.ErrorCode.INTERNAL_ERROR;
-
 import java.net.URI;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,13 +15,10 @@ import java.util.stream.Collectors;
 
 import discovery.Discovery;
 import microgram.api.Profile;
-import microgram.api.java.Profiles;
 import microgram.api.java.Result;
-import microgram.api.java.Result.ErrorCode;
 import microgram.impl.clt.java.RetryPostsClient;
 import microgram.impl.clt.rest.RestPostsClient;
 import microgram.impl.srv.rest.PostsRestServer;
-import microgram.impl.srv.rest.ProfilesRestServer;
 import microgram.impl.srv.rest.RestMediaStorageServer;
 import microgram.impl.srv.rest.RestResource;
 import utils.Sleep;
