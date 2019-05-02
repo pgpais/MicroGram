@@ -108,4 +108,7 @@ public class RestPostsClient extends RestClient implements Posts {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
 }

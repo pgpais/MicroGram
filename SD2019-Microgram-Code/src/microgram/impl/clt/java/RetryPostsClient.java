@@ -51,8 +51,7 @@ public class RetryPostsClient extends RetryClient implements Posts {
 
 	@Override
 	public Result<Integer> getPostNumber(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return reTry( () -> impl.getPostNumber(userId));
 	}
 
 }

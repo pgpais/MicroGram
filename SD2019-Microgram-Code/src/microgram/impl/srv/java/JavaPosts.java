@@ -150,7 +150,7 @@ public class JavaPosts implements Posts {
 		if (res.isOK()) {
 			following = res.value();
 		} else {
-			error(NOT_FOUND);
+			return error(NOT_FOUND);
 		}
 
 		List<String> posts = new LinkedList<String>();
@@ -170,7 +170,7 @@ public class JavaPosts implements Posts {
 		if (res.isOK()) {
 			posts = res.value().getPosts();
 		} else {
-			error(NOT_FOUND);
+			return error(NOT_FOUND);
 		}
 
 		return ok(posts);
