@@ -57,8 +57,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 			temp.remove(userId);
 			following.replace(u, temp);	
 		}
-		followers.remove(userId);
-		
+		// TODO: decrease profile stats
 		return ok();
 	}
 	
