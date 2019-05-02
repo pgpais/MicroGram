@@ -66,7 +66,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 		if(res.isOK()) {
 			prof.setPosts(res.value());
 		} else {
-			return error(INTERNAL_ERROR);
+			return error(NOT_FOUND);
 		}
 		
 		

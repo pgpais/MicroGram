@@ -65,24 +65,17 @@ public class JavaPosts implements Posts {
 	@Override
 	public Result<Void> deletePost(String postId) {
 		Post res = posts.remove(postId);
-		if (res != null)
+		if (res == null)
 			return error(NOT_FOUND);
-		else
-			return ok();
+		
+		likes.remove(postId);
+		userPosts.get(res.getOwnerId()).remove(postId);
+		return ok();
+		
 	}
 
 	@Override
 	public Result<String> createPost(Post post) {
-		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
-		Result<Profile> res = client.getProfile(post.getOwnerId());
-		Profile prof = null;
-		
-		if(res.isOK()) {
-			prof = res.value();
-		} else {
-			return error(NOT_FOUND);
-		}
-		
 		String postId = Hash.of(post.getOwnerId(), post.getMediaUrl());
 		if (posts.putIfAbsent(postId, post) == null) {
 
@@ -93,9 +86,8 @@ public class JavaPosts implements Posts {
 				userPosts.put(post.getOwnerId(), posts = new LinkedHashSet<>());
 
 			posts.add(postId);
-			prof.setPosts(posts.size());
 		}
-		return ok(postId);
+return ok(postId);
 	}
 
 	@Override
@@ -166,7 +158,7 @@ public class JavaPosts implements Posts {
 		Set<String> posts = userPosts.get(userId);
 		int res = -1;
 		if(posts == null) {
-			return error(NOT_FOUND);
+			return ok(0);
 		}
 		else
 			res = posts.size();
