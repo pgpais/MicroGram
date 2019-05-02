@@ -2,6 +2,13 @@ package microgram.impl.clt.rest;
 
 import java.net.URI;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import microgram.api.Post;
 import microgram.api.java.Media;
 import microgram.api.java.Result;
 import microgram.api.rest.RestMediaStorage;
@@ -14,14 +21,22 @@ public class RestMediaClient extends RestClient implements Media {
 
 	@Override
 	public Result<String> upload(byte[] bytes) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target
+				.request()
+				.post( Entity.entity( bytes, MediaType.APPLICATION_OCTET_STREAM));
+		
+		return super.responseContents(r, Status.OK, new GenericType<String>(){});	
 	}
 
 	@Override
 	public Result<byte[]> download(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		Response r = target.path(id)
+				.request()
+				.accept(MediaType.APPLICATION_JSON)
+				.get();
+		
+		
+		return super.responseContents(r, Status.OK, new GenericType<byte[]>(){});
 	}
 
 }
