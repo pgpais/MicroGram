@@ -39,6 +39,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	@Override
 	public Result<Void> createProfile(Profile profile) {
 		// TODO: Conflict when OK was expected
+		// might also be related to slow VM?
 		Profile res = users.putIfAbsent( profile.getUserId(), profile );
 		if( res != null ) 
 			return error(CONFLICT);
