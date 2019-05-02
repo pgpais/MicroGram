@@ -50,14 +50,23 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	@Override
 	public Result<Void> deleteProfile(String userId) {
 		users.remove(userId);
-		following.remove(userId);
-		Set<String> s = followers.get(userId);
-		for(String u: s) {
+		Set<String> fing = following.remove(userId);
+		Set<String> fers = followers.remove(userId);
+		
+		for(String u: fers) {
+			Profile p = users.get(u);
+			p.setFollowing(p.getFollowing()-1);
 			Set<String> temp = following.get(u);
 			temp.remove(userId);
-			following.replace(u, temp);	
 		}
-		// TODO: decrease profile stats
+		
+		for(String u: fing) {
+			Profile p = users.get(u);
+			p.setFollowers(p.getFollowers()-1);
+			Set<String> temp = followers.get(u);
+			temp.remove(userId);
+		}
+		
 		return ok();
 	}
 	
