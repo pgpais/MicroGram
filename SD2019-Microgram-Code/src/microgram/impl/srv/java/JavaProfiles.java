@@ -49,6 +49,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	
 	@Override
 	public Result<Void> deleteProfile(String userId) {
+		//TODO: not fixed, failed at 4g (concurrent stuff)
 		if(users.remove(userId) == null)
 		{
 			return error(NOT_FOUND);
