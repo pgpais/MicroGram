@@ -122,7 +122,7 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		//Use profile server list
+		//Use profile server list, maybe make cycle for multiple servers
 //		URI[] uri = Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1);
 //
 //		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(uri[0]));
