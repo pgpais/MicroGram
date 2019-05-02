@@ -36,7 +36,7 @@ public class JavaPosts implements Posts {
 	protected Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
 
 	private List<URI> profileServers;
-	private static int TIMEOUT = 2;
+	private static int SLEEP_TIMEOUT = 2;
 
 	public JavaPosts() {
 
@@ -47,7 +47,7 @@ public class JavaPosts implements Posts {
 			while (true) {
 				for (URI uri : Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1))
 					profileServers.add(uri);
-				Sleep.seconds(TIMEOUT);
+				Sleep.seconds(SLEEP_TIMEOUT);
 			}
 		}).start();
 
@@ -160,4 +160,19 @@ public class JavaPosts implements Posts {
 		}
 		return ok(posts);
 	}
+
+	public Result<Integer> getPostNumber(String userId){
+		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
+		Result<Profile> res = client.getProfile(userId);
+		int posts = -1;
+
+		if (res.isOK()) {
+			posts = res.value().getPosts();
+		} else {
+			error(NOT_FOUND);
+		}
+
+		return ok(posts);
+	}
 }
+
