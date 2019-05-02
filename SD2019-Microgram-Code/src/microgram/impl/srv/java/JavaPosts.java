@@ -80,7 +80,7 @@ public class JavaPosts implements Posts {
 		if(res.isOK()) {
 			prof = res.value();
 		} else {
-			error(NOT_FOUND);
+			return error(NOT_FOUND);
 		}
 		
 		String postId = Hash.of(post.getOwnerId(), post.getMediaUrl());
