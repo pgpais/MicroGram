@@ -101,4 +101,11 @@ public class RestPostsClient extends RestClient implements Posts {
 		
 		return super.responseContents(r, Status.OK, new GenericType<List<String>>(){});
 	}
+
+
+	@Override
+	public Result<Integer> getPostNumber(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

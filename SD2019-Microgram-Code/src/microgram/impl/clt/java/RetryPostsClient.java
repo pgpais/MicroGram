@@ -49,4 +49,10 @@ public class RetryPostsClient extends RetryClient implements Posts {
 		return reTry( () -> impl.getFeed(userId));
 	}
 
+	@Override
+	public Result<Integer> getPostNumber(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

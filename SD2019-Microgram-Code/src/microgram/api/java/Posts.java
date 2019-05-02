@@ -68,4 +68,6 @@ public interface Posts {
 	 * @return (OK,List<PostId>|empty list), NOT_FOUND if the user profile is not known
 	 */
 	Result<List<String>> getFeed( String userId);
+
+	Result<Integer> getPostNumber(String userId);
 }

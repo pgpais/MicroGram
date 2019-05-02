@@ -160,7 +160,8 @@ public class JavaPosts implements Posts {
 		}
 		return ok(posts);
 	}
-
+	
+	@Override
 	public Result<Integer> getPostNumber(String userId){
 		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
 		Result<Profile> res = client.getProfile(userId);
