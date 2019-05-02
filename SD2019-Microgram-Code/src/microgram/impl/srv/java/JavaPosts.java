@@ -4,8 +4,11 @@ import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ok;
 import static microgram.api.java.Result.ErrorCode.CONFLICT;
 import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
+import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
+
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -19,10 +22,10 @@ import microgram.api.Post;
 import microgram.api.Profile;
 import microgram.api.java.Posts;
 import microgram.api.java.Result;
+import microgram.api.java.Result.ErrorCode;
 import microgram.impl.clt.java.RetryProfilesClient;
 import microgram.impl.clt.rest.RestProfilesClient;
 import microgram.impl.srv.rest.ProfilesRestServer;
-import microgram.impl.srv.rest.RestMediaStorageServer;
 import utils.Hash;
 import utils.Sleep;
 
@@ -33,7 +36,6 @@ public class JavaPosts implements Posts {
 	protected Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
 
 	private List<URI> profileServers;
-	private List<URI> mediaServers;
 	private static int SLEEP_TIMEOUT = 2;
 
 	public JavaPosts() {
@@ -45,16 +47,6 @@ public class JavaPosts implements Posts {
 			while (true) {
 				for (URI uri : Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1))
 					profileServers.add(uri);
-				Sleep.seconds(SLEEP_TIMEOUT);
-			}
-		}).start();
-		
-		mediaServers = new LinkedList<URI>();
-		
-		new Thread(() -> {
-			while (true) {
-				for (URI uri : Discovery.findUrisOf(RestMediaStorageServer.SERVICE, 1))
-					mediaServers.add(uri);
 				Sleep.seconds(SLEEP_TIMEOUT);
 			}
 		}).start();
@@ -72,10 +64,17 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<Void> deletePost(String postId) {
-		Post post = posts.remove(postId);
 		
-		if (post == null)
+		Result<Post> res = getPost(postId);
+		System.err.println(postId);
+		
+		if (!res.isOK())
 			return error(NOT_FOUND);
+		
+		Post post = res.value();
+		
+		boolean removed = posts.remove(postId, post);
+		System.err.println("remove was " + removed);
 
 		likes.remove(postId);
 		userPosts.get(post.getOwnerId()).remove(postId);
@@ -146,7 +145,11 @@ public class JavaPosts implements Posts {
 
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		
+		// Use profile server list, maybe make cycle for multiple servers
+//		URI[] uri = Discovery.findUrisOf(ProfilesRestServer.SERVICE, 1);
+//
+//		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(uri[0]));
+
 		RetryProfilesClient client = new RetryProfilesClient(new RestProfilesClient(profileServers.get(0)));
 		Result<Set<String>> res = client.getFollowing(userId);
 		Set<String> following = null;
