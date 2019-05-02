@@ -55,6 +55,17 @@ public class JavaMedia implements MediaStorage {
 	
 	@Override
 	public Result<Void> delete(String id) {
-		throw new RuntimeException("Not implemented...");	
+		try {
+			File filename = new File(ROOT_DIR + id + MEDIA_EXTENSION);
+			if(filename.exists()) {
+				filename.delete();
+			}
+			else
+				return Result.error(NOT_FOUND);
+			
+		} catch (Exception x) {
+			return Result.error(INTERNAL_ERROR);
+		}
+		return Result.ok();
 	}
 }
