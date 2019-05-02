@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -35,6 +36,10 @@ public interface RestProfiles {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	void createProfile( Profile profile );
+	
+	@DELETE
+	@Path("/delete/{userId}")
+	void deleteProfile( @PathParam("userId") String userId);
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
