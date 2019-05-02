@@ -6,16 +6,24 @@ import java.util.List;
 import java.util.Set;
 
 import microgram.api.Profile;
+import microgram.api.java.Posts;
 import microgram.api.java.Profiles;
 import microgram.api.rest.RestProfiles;
+import microgram.impl.srv.java.JavaPosts;
 import microgram.impl.srv.java.JavaProfiles;
 
 public class RestProfilesResources extends RestResource implements RestProfiles {
 
-	final Profiles impl;
+	Profiles impl;
 	
 	public RestProfilesResources(URI serverUri) {
-		this.impl = new JavaProfiles();
+		this.impl = impl();
+	}
+	
+	synchronized Profiles impl() {
+		if ( impl == null)
+			impl = new JavaProfiles();
+		return impl;
 	}
 	
 	@Override

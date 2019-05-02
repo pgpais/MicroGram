@@ -11,10 +11,16 @@ import microgram.impl.srv.java.JavaPosts;
 // Make this class concrete.
 public class RestPostsResources extends RestResource implements RestPosts {
 
-	final Posts impl;
+	Posts impl;
 		
 	public RestPostsResources(URI serverUri) {
-		this.impl = new JavaPosts();
+		this.impl = impl();
+	}
+	
+	synchronized Posts impl() {
+		if ( impl == null)
+			impl = new JavaPosts();
+		return impl;
 	}
 	
 	@Override
