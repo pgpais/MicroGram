@@ -59,5 +59,9 @@ public interface RestPosts {
 	@Produces(MediaType.APPLICATION_JSON)
 	List<String> getFeed(@PathParam("userId") String userId);
 	
+	@GET
+	@Path("/posts/{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	Integer getPostsNumber(@PathParam("userId") String userId);
 
 }

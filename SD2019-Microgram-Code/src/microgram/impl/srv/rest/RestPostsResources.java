@@ -57,5 +57,10 @@ public class RestPostsResources extends RestResource implements RestPosts {
 	public List<String> getFeed(String userId) {
 		return super.resultOrThrow(impl.getFeed(userId));
 	}
+
+	@Override
+	public Integer getPostsNumber(String userId) {
+		return super.resultOrThrow(impl.getPostNumber(userId));
+	}
  
 }
