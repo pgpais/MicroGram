@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import discovery.Discovery;
 import microgram.impl.srv.rest.utils.GenericExceptionMapper;
 import microgram.impl.srv.rest.utils.PrematchingRequestFilter;
 import utils.IP;
@@ -37,5 +38,7 @@ public class RestMediaStorageServer {
 		JdkHttpServerFactory.createHttpServer( URI.create(serverURI.replace(ip, "0.0.0.0")), config);
 
 		Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
+		
+		Discovery.announce(SERVICE, serverURI);
 	}
 }
