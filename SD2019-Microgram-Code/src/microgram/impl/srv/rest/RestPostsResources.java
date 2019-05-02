@@ -30,7 +30,7 @@ public class RestPostsResources extends RestResource implements RestPosts {
 
 	@Override
 	public void deletePost(String postId) {
-		super.resultOrThrow(impl.getPost(postId));
+		super.resultOrThrow(impl.deletePost(postId));
 	}
 
 	@Override

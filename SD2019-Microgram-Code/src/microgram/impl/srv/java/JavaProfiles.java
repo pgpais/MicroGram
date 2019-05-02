@@ -35,7 +35,7 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 	protected Map<String, Set<String>> following = new ConcurrentHashMap<>();
 
 	private List<URI> postServers = new LinkedList<URI>();
-	private static int SLEEP_TIME = 5;
+	private static int SLEEP_TIME = 2;
 
 	// TODO: this isn't needed?
 	public JavaProfiles() {
@@ -59,17 +59,16 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 
 		prof.setFollowers(followers.get(userId).size());
 		prof.setFollowing(following.get(userId).size());
-		
+
 		RetryPostsClient client = new RetryPostsClient(new RestPostsClient(postServers.get(0)));
 		Result<Integer> res = client.getPostNumber(userId);
-		
-		if(res.isOK()) {
+
+		if (res.isOK()) {
 			prof.setPosts(res.value());
 		} else {
 			return error(NOT_FOUND);
 		}
-		
-		
+
 		return ok(prof);
 	}
 
@@ -95,25 +94,20 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 		Set<String> fing = following.remove(userId);
 		Set<String> fers = followers.remove(userId);
 
-		try {
-			for (String u : fers) {
-				Profile p = users.get(u);
-				p.setFollowing(p.getFollowing() - 1);
-				Set<String> temp = following.get(u);
-				temp.remove(userId);
-				following.replace(u, temp);
-			}
+		for (String u : fers) {
+			Profile p = users.get(u);
+			p.setFollowing(p.getFollowing() - 1);
+			Set<String> temp = following.get(u);
+			temp.remove(userId);
+			following.replace(u, temp);
+		}
 
-			for (String u : fing) {
-				Profile p = users.get(u);
-				p.setFollowers(p.getFollowers() - 1);
-				Set<String> temp = followers.get(u);
-				temp.remove(userId);
-				followers.replace(u, temp);
-			}
-
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
+		for (String u : fing) {
+			Profile p = users.get(u);
+			p.setFollowers(p.getFollowers() - 1);
+			Set<String> temp = followers.get(u);
+			temp.remove(userId);
+			followers.replace(u, temp);
 		}
 
 		return ok();
