@@ -7,11 +7,11 @@ import microgram.api.Profile;
 import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 
-public class _TODO_RetryProfilesClient extends RetryClient implements Profiles {
+public class RetryProfilesClient extends RetryClient implements Profiles {
 
 	final Profiles impl;
 
-	public _TODO_RetryProfilesClient( Profiles impl ) {
+	public RetryProfilesClient( Profiles impl ) {
 		this.impl = impl;	
 	}
 	

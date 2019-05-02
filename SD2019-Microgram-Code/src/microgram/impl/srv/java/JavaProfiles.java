@@ -94,7 +94,6 @@ public class JavaProfiles extends RestResource implements microgram.api.java.Pro
 		if( s1 == null || s2 == null)
 			return error(NOT_FOUND);
 		
-		// TODO: this doesn't feel right
 		if( isFollowing ) {
 			boolean added1 = s1.add(userId2 ), added2 = s2.add( userId1 );
 			if( ! added1 || ! added2 )
